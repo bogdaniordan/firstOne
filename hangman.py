@@ -129,10 +129,10 @@ def play(word,lives):
 
         if user_input == 'quit':
             print('Quitting game!')
-            break
+            play_game = False
         for item in underscore:
             if user_input == item:
-                print('You\'ve already guessed this letter.')
+                print('You\'ve already guessed this letter. Please enter a different one!')
                 break
         indices = [idx for idx, value in enumerate(list(word.lower())) if value == user_input]
         for i in list(word.lower()):
@@ -168,7 +168,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
 
 
 
