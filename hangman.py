@@ -1,6 +1,5 @@
 import random
 
-
 path = '/home/bogdan/Desktop/projects/practice/'
 file_name = 'word_list.txt'
 
@@ -79,12 +78,10 @@ def display_hangman(tries):
     ]
     return stages[tries]
 
-# 3 difficulty levels - easy 7 lives medium 5 lives hard 3 lives
-# if difficulty == easy: lives = 7 etc...
+
 def choose_word():
     with open(path + file_name, 'r') as file:
         words_list = file.readlines()
-        # random_word = 
         random_word = words_list[random.randrange(0, len(words_list))]
         random_word = random_word[:-1] #because every words ends with '\n'
         #pick a random word depending on the difficulty, hard difficulty may result in words with no duplicate letters ( use sets)
@@ -114,51 +111,52 @@ def underscore_word(word):
 def play(word,lives):
     init = 0
     play_game = True
+    stance = -1 #shows the hangman stance
     while play_game == True:
         while init == 0:
             print('Welcome to the Hangman game!')
             init += 1
-            # lives = difficulty()
-            # # hangman = display_hangman(lives)
-            # word = choose_word()
             underscore = underscore_word(word)
-            # del underscore[-1]
             print(' '.join(underscore))
+            if lives == 7:
+                difficulty_level = 1
+            elif lives == 5:
+                difficulty_level = 2
+            else:
+                difficulty_level = 3
         user_input = ask_input()
 
         if user_input == 'quit':
             print('Quitting game!')
             break
-
-        # for i in list(word.lower()):
-        #     indexxx = list(word.lower()).index(i)
-        #     if user_input == i:
-        #         underscore[indexxx] = user_input
-        #         print(' '.join(underscore))
         for item in underscore:
             if user_input == item:
                 print('You\'ve already guessed this letter.')
                 break
-        # indices = []
-        hits = [idx for idx, value in enumerate(list(word.lower())) if value == user_input]
-        # print(hits)
+        indices = [idx for idx, value in enumerate(list(word.lower())) if value == user_input]
         for i in list(word.lower()):
-            # indexxx = list(word.lower()).index(i)
-            for idx in hits:
+            for idx in indices:
                 if user_input == i:
                     underscore[idx] = user_input
         print(' '.join(underscore))
-        stance = -1 #shows the hangman stance
+
         if user_input not in list(word.lower()):
             lives -= 1 
-            print(display_hangman(stance)) # show first picture, first state of the hangman
-            stance -= 1
+            if difficulty_level == 1:
+                stance = stance - 1
+            elif difficulty_level == 2:
+                stance = stance - 2
+            elif difficulty_level == 3:
+                stance = stance - 2
+            if stance <= - 7:
+                print(display_hangman(0))
+                print('You lost')
+                play_game = False
+            print(display_hangman(stance)) 
 
-        if lives == 0:
-            print(display_hangman(0))
-            print('You lost')
-            break
-
+        if all(item != '_' for item in underscore) == True:
+            print('You won!')
+            play_game = False
         
 
 
