@@ -1,5 +1,6 @@
 import random
 
+
 path = '/home/bogdan/Desktop/projects/practice/'
 file_name = 'word_list.txt'
 
@@ -85,8 +86,8 @@ def choose_word():
         words_list = file.readlines()
         # random_word = 
         random_word = words_list[random.randrange(0, len(words_list))]
+        random_word = random_word[:-1] #because every words ends with '\n'
         #pick a random word depending on the difficulty, hard difficulty may result in words with no duplicate letters ( use sets)
-        # print(random_word)
         return random_word
 
 def ask_input():
@@ -121,33 +122,44 @@ def play(word,lives):
             # # hangman = display_hangman(lives)
             # word = choose_word()
             underscore = underscore_word(word)
-        print(underscore)
+            # del underscore[-1]
+            print(' '.join(underscore))
         user_input = ask_input()
 
         if user_input == 'quit':
             print('Quitting game!')
             break
 
+        # for i in list(word.lower()):
+        #     indexxx = list(word.lower()).index(i)
+        #     if user_input == i:
+        #         underscore[indexxx] = user_input
+        #         print(' '.join(underscore))
+        for item in underscore:
+            if user_input == item:
+                print('You\'ve already guessed this letter.')
+                break
+        # indices = []
+        hits = [idx for idx, value in enumerate(list(word.lower())) if value == user_input]
+        # print(hits)
         for i in list(word.lower()):
-            indexxx = list(word.lower()).index(i)
-            if user_input == i:
-                underscore[indexxx] = user_input
-                print(underscore)
-            for i in underscore:
+            # indexxx = list(word.lower()).index(i)
+            for idx in hits:
                 if user_input == i:
-                    print('You\'ve already guessed this letter.')
+                    underscore[idx] = user_input
+        print(' '.join(underscore))
+        stance = -1 #shows the hangman stance
         if user_input not in list(word.lower()):
             lives -= 1 
-            print(display_hangman(-1)) # show first picture, first state of the hangman
+            print(display_hangman(stance)) # show first picture, first state of the hangman
+            stance -= 1
 
         if lives == 0:
             print(display_hangman(0))
             print('You lost')
             break
 
-        # for i in underscore:
-        #     if i == '_' is False:
-        #             print('you won')
+        
 
 
 
