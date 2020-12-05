@@ -1,5 +1,6 @@
 import random
 
+
 path = '/home/bogdan/Desktop/projects/practice/'
 file_name = 'word_list.txt'
 
@@ -138,7 +139,7 @@ def play(word,lives):
             for idx in indices:
                 if user_input == i:
                     underscore[idx] = user_input
-        print(' '.join(underscore))
+        print(' '.join(underscore).capitalize())
 
         if user_input not in list(word.lower()):
             lives -= 1 
@@ -146,7 +147,7 @@ def play(word,lives):
                 stance = stance - 1
             elif difficulty_level == 2:
                 stance = stance - 2
-            elif difficulty_level == 3:
+            else:
                 stance = stance - 2
             if stance <= - 7:
                 print(display_hangman(0))
@@ -167,6 +168,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
 
 
 
