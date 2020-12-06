@@ -112,17 +112,9 @@ def get_ai_move(matrix): #AI picks a random slot
     for pair in moves:
         if matrix[pair[0]][pair[1]] == ' . ':
             f.append(pair)
-    return f[random.randint(0,len(f))]
+    return f[random.randint(0,len(f)-1)]
 
-# def main_menu():
-#     print('Welcome to TIC-TAC-TOE!')
-#     choice = input('Please choose a game mode (1. Human vs. Human 2. Human vs AI 3. AI vs Human): ')
-#     if choice == 1:
-#         tictactoe_game()
-#     elif choice == 2:
-#         tictactoe_game('HUMAN-AI')
-#     else:
-#         tictactoe_game('AI-HUMAN')
+
 
 def tictactoe_game(mode = None):
     play_game = True
@@ -132,32 +124,27 @@ def tictactoe_game(mode = None):
         while init == 0:
             init = init + 1
             board = print_board()
-            print('Welcome to TIC-TAC-TOE!')
             printer(board)
             break
         turn += 1
         if mode == 'HUMAN-AI':
-            # ai_move = get_ai_move(board)
-            # mark(board, ai_move, turn)
             if turn % 2 == 1:
                 user_input = get_move()
                 mark(board, user_input, turn)
             else:
                 ai_move = get_ai_move(board)
-                mark(board, ai_move, turn)   
+                mark(board, ai_move, turn)
+        elif mode == 'AI-HUMAN':
+            if turn % 2 == 0:
+                user_input = get_move()
+                mark(board, user_input, turn)
+            else:
+                ai_move = get_ai_move(board)
+                mark(board, ai_move, turn)  
         else: 
             user_input = get_move()
             mark(board, user_input, turn)
-        # turn += 1
-        # if mode == 'HUMAN-AI':
-        #     if turn % 2 == 1:
-        #         mark(board, user_input, turn)
-        #     else:
-        # if turn % 2 == 1:
-        #         print(ai_move)
-        #         mark(board,ai_move,turn)
-        # else:
-        
+
         printer(board)
         verdict = has_won(board)
         if verdict == True:
@@ -171,8 +158,20 @@ def tictactoe_game(mode = None):
         
 
 
+def main_menu():
+    print('Welcome to TIC-TAC-TOE!')
+    choice = input('Please choose a game mode (1. Human vs. Human 2. Human vs AI 3. AI vs Human): ')
+    if choice == '1':
+        tictactoe_game()
+    elif choice == '2':
+        tictactoe_game('HUMAN-AI')
+    else:
+        tictactoe_game('AI-HUMAN')
+
+
 def main():
-    tictactoe_game('HUMAN-AI')
+    main_menu()
+    # tictactoe_game('AI-HUMAN')
 
 
 if __name__ == '__main__':
