@@ -119,6 +119,12 @@ def underscore_word(word):
         show_underline.append('_')
     return show_underline
 
+def win_check(word, initial_word):
+    if all(item != '_' for item in word) == True:
+        print('You won!')
+        print(initial_word)
+        play_game = False    
+
 def play(word,lives):
     init = 0
     play_game = True
@@ -164,11 +170,7 @@ def play(word,lives):
                 print('You lost')
                 play_game = False
             print(display_hangman(stance)) 
-
-        if all(item != '_' for item in underscore) == True:
-            print('You won!')
-            print(word)
-            play_game = False
+        win_check(underscore, word)
         
 
 
@@ -180,6 +182,9 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
 
 
 
