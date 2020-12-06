@@ -106,11 +106,11 @@ def print_result(player_turn):
     else:
         print('O has won!')
 
-# def get_ai_move(matrix): #AI picks a random slot
-#     moves = [(1,1), (1,3), (1,5), (3,1), (3,3), (3,5), (5,1), (5,3), (5,5)]
-#     for pair in moves:
-#         if matrix[pair[0]][pair[1]] == ' . ':
-#             return pair
+def get_ai_move(matrix): #AI picks a random slot
+    moves = [(1,1), (1,3), (1,5), (3,1), (3,3), (3,5), (5,1), (5,3), (5,5)]
+    for pair in moves:
+        if matrix[pair[0]][pair[1]] == ' . ':
+            return pair
 
 # def main_menu():
 #     print('Welcome to TIC-TAC-TOE!')
@@ -133,10 +133,20 @@ def tictactoe_game(mode = None):
             print('Welcome to TIC-TAC-TOE!')
             printer(board)
             break
-        # if mode == 'HUMAN-AI' or 'AI-HUMAN':
-        #     ai_move = get_ai_move(board)
-        user_input = get_move()
         turn += 1
+        if mode == 'HUMAN-AI':
+            # ai_move = get_ai_move(board)
+            # mark(board, ai_move, turn)
+            if turn % 2 == 1:
+                user_input = get_move()
+                mark(board, user_input, turn)
+            else:
+                ai_move = get_ai_move(board)
+                mark(board, ai_move, turn)   
+        else: 
+            user_input = get_move()
+            mark(board, user_input, turn)
+        # turn += 1
         # if mode == 'HUMAN-AI':
         #     if turn % 2 == 1:
         #         mark(board, user_input, turn)
@@ -145,7 +155,7 @@ def tictactoe_game(mode = None):
         #         print(ai_move)
         #         mark(board,ai_move,turn)
         # else:
-        mark(board, user_input, turn)
+        
         printer(board)
         verdict = has_won(board)
         if verdict == True:
