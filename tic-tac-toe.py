@@ -1,4 +1,5 @@
 import random
+import sys
 
 def init_board():
     matrix = []
@@ -14,10 +15,6 @@ def get_move():
     try:
         user_input = input('Please enter a coordinate (eg. A3): ')
         listed_coordinate = list(user_input)
-        # play_game = False
-        # if user_input == 'quit':
-        #     print('Quitting game!')
-        #     return play_game == False
     except ValueError as err:
         print({err})
     else:
@@ -114,7 +111,9 @@ def get_ai_move(matrix): #AI picks a random slot
             f.append(pair)
     return f[random.randint(0,len(f)-1)]
 
-
+def check_quit(inp):
+    if inp == 'quit':
+        sys.exit(0)
 
 def tictactoe_game(mode = None):
     play_game = True
@@ -130,6 +129,7 @@ def tictactoe_game(mode = None):
         if mode == 'HUMAN-AI':
             if turn % 2 == 1:
                 user_input = get_move()
+                check_quit(user_input)
                 mark(board, user_input, turn)
             else:
                 ai_move = get_ai_move(board)
@@ -137,12 +137,14 @@ def tictactoe_game(mode = None):
         elif mode == 'AI-HUMAN':
             if turn % 2 == 0:
                 user_input = get_move()
+                check_quit(user_input)
                 mark(board, user_input, turn)
             else:
                 ai_move = get_ai_move(board)
                 mark(board, ai_move, turn)  
         else: 
             user_input = get_move()
+            check_quit(user_input)
             mark(board, user_input, turn)
 
         printer(board)
