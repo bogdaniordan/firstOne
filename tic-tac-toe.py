@@ -108,9 +108,11 @@ def print_result(player_turn):
 
 def get_ai_move(matrix): #AI picks a random slot
     moves = [(1,1), (1,3), (1,5), (3,1), (3,3), (3,5), (5,1), (5,3), (5,5)]
+    f = []
     for pair in moves:
         if matrix[pair[0]][pair[1]] == ' . ':
-            return pair
+            f.append(pair)
+    return f[random.randint(0,len(f))]
 
 # def main_menu():
 #     print('Welcome to TIC-TAC-TOE!')
@@ -161,6 +163,7 @@ def tictactoe_game(mode = None):
         if verdict == True:
             print_result(turn)
             play_game = False
+            break
         full_board = is_full(board)
         if full_board == True:
             print('It\'s a tie!')
