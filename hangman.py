@@ -1,8 +1,8 @@
 import random
-
+import string
 
 path = '/home/bogdan/Desktop/projects/practice/'
-file_name = 'word_list.txt'
+file_name = 'countries-and-capitals.txt'
 
 
 def display_hangman(tries):
@@ -84,9 +84,19 @@ def choose_word():
     with open(path + file_name, 'r') as file:
         words_list = file.readlines()
         random_word = words_list[random.randrange(0, len(words_list))]
-        random_word = random_word[:-1] #because every words ends with '\n'
+        listed_word = list(random_word)
+        for elem in listed_word:
+            half_index = listed_word.index(elem)
+            if elem == '|':
+                chosen_word = listed_word[:half_index]
+        alphabet = list(string.ascii_letters)
+        for item in chosen_word:
+            if item not in alphabet:
+                chosen_word.remove(item)
+
+        # random_word = random_word[:-1] #because every words ends with '\n'
         #pick a random word depending on the difficulty, hard difficulty may result in words with no duplicate letters ( use sets)
-        return random_word
+        return ''.join(chosen_word)
 
 def ask_input():
     letter = input('Please enter a leter: ')
@@ -128,7 +138,7 @@ def play(word,lives):
         user_input = ask_input()
 
         if user_input == 'quit':
-            print('Quitting game!')
+            print('Quitting game. Good-bye!!')
             play_game = False
         for item in underscore:
             if user_input == item:
@@ -146,7 +156,7 @@ def play(word,lives):
             if difficulty_level == 1:
                 stance = stance - 1
             elif difficulty_level == 2:
-                stance = stance - 2
+                stance -= 2
             else:
                 stance = stance - 2
             if stance <= - 7:
@@ -157,6 +167,7 @@ def play(word,lives):
 
         if all(item != '_' for item in underscore) == True:
             print('You won!')
+            print(word)
             play_game = False
         
 
@@ -164,6 +175,7 @@ def play(word,lives):
 
 def main():
     play(choose_word(), difficulty())
+    # play('Codecool', 5)
 
 
 if __name__ == '__main__':
