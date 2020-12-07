@@ -1,5 +1,6 @@
 import random
 import sys
+import time
 
 def init_board():
     matrix = []
@@ -12,28 +13,45 @@ def init_board():
 
 
 def get_move():
-    try:
-        user_input = input('Please enter a coordinate (eg. A3): ')
-        listed_coordinate = list(user_input)
-    except ValueError as err:
-        print({err})
-    else:
-        if listed_coordinate[0] == 'A':
-            move1 = 1
-        elif listed_coordinate[0] == 'B':
-            move1= 3
-        elif listed_coordinate[0] == 'C':
-            move1 = 5
-        if listed_coordinate[1] == '1':
-            move2 = 1
-        elif listed_coordinate[1] == '2':
-            move2 = 3
-        elif listed_coordinate[1] == '3':
-            move2 = 5
-        coordinate_tuple = (move1, move2)
-        return coordinate_tuple
+    while True:
+        # try:
+        try:
+            user_input = input('Please enter a coordinate (eg. A3): ')
+            listed_coordinate = list(user_input)
+            # if user_input != 'A1' or user_input != 'A2' or user_input != 'A3' or user_input != 'B1' or user_input != 'B2' or user_input != 'B3':
+            #     print('Please enter a valid coordinate')
+            #     # break
+            #     raise ValueError('Invalid coordinate')
+            #     # break
+        except ValueError:
+            print('Input must be a valid coordinate!')
+            break
+        # if user_input != 'A1' or user_input != 'A2' or user_input != 'A3' or user_input != 'B1' or user_input != 'B2' or user_input != 'B3':
+        #     print('Please enter a valid coordinate')
+        #     break
+        else:
+            if listed_coordinate[0] == 'A':
+                move1 = 1
+            elif listed_coordinate[0] == 'B':
+                move1= 3
+            elif listed_coordinate[0] == 'C':
+                move1 = 5
+            if listed_coordinate[1] == '1':
+                move2 = 1
+            elif listed_coordinate[1] == '2':
+                move2 = 3
+            elif listed_coordinate[1] == '3':
+                move2 = 5
+            coordinate_tuple = (move1, move2)
+                # if board[coordinate_tuple[0]][coordinate_tuple[1]] == ' X ' or board[coordinate_tuple[0]][coordinate_tuple[1]] == ' O ':
+                #     print('The field is already taken.')
+                    # break
+                # else:
+            return coordinate_tuple
+        # except ValueError as err:
+        #     print({err})
+        #     continue
 
-# get_move()
 
 def mark(board, player_input, player_turn, mode = None):
     if player_turn % 2 == 1:
@@ -141,7 +159,16 @@ def tictactoe_game(mode = None):
                 mark(board, user_input, turn)
             else:
                 ai_move = get_ai_move(board)
-                mark(board, ai_move, turn)  
+                mark(board, ai_move, turn)
+        elif mode == 'AI-AI':
+            if turn % 2 == 0:
+                time.sleep(1)
+                ai_move = get_ai_move(board)
+                mark(board, ai_move, turn)
+            else:
+                time.sleep(1)
+                ai_move = get_ai_move(board)
+                mark(board, ai_move, turn)
         else: 
             user_input = get_move()
             check_quit(user_input)
@@ -162,18 +189,19 @@ def tictactoe_game(mode = None):
 
 def main_menu():
     print('Welcome to TIC-TAC-TOE!')
-    choice = input('Please choose a game mode (1. Human vs. Human 2. Human vs AI 3. AI vs Human): ')
+    choice = input('Please choose a game mode (1. Human vs. Human 2. Human vs AI 3. AI vs Human 4. AI vs AI): ')
     if choice == '1':
         tictactoe_game()
     elif choice == '2':
         tictactoe_game('HUMAN-AI')
-    else:
+    elif choice == '3':
         tictactoe_game('AI-HUMAN')
+    elif choice == '4':
+        tictactoe_game('AI-AI')
 
 
 def main():
     main_menu()
-    # tictactoe_game('AI-HUMAN')
 
 
 if __name__ == '__main__':
