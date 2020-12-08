@@ -1,3 +1,6 @@
+import string
+alphabet = string.ascii_uppercase
+
 ships_for_player1 = [2,1]
 ships_for_player2 = [2,2,3,4]
 REPRESENTATION_WATER_ON_MAP = 0
@@ -6,20 +9,35 @@ REPRESENTATION_SHIP_ON_MAP = 1
 REPRESENTATION_HIT_ON_MAP = 'H'
 
 def create_map():
-    return []
+    board = [[' ', '1', '2', '3', '4', '5'], ['A', '0', '0', '0', '0', '0'], ['B', '0', '0', '0', '0', '0'], ['C', '0', '0', '0', '0', '0'], ['D', '0', '0', '0', '0', '0'], ['E', '0', '0', '0', '0', '0']]
+    return board
+ 
 
 def coordinates_in_valid_format(coordinates):
-    #verify if coordinates are in form letter and number
-    return True
+    if list(coordinates)[0] in list(alphabet) and list(coordinates)[1].isdigit():
+        return True
 
 def coordinate_are_inside_map(coordinates):
-    #verify if number is between 1 and 5 and letter letter between A-Z
-    return True
+    list_of_coordinates = list(coordinates)
+    e_index_alphabet = list(alphabet).index('E')
+    if list_of_coordinates[0] in list(alphabet)[e_index_alphabet:len(alphabet)] or int(list_of_coordinates[1]) > 5:
+        return False
+    else:
+        return True
 
 def transform_coordinates(coordinates):
-    # transform from letter, number to number, number keeping track of the fact that counting in a list starts from 0  and not 1
-    x_axis_coordinate = 1
-    y_axis_coordinate = 1
+    list_of_coordinates = list(coordinates)
+    if list_of_coordinates[0] == 'A':
+        x_axis_coordinate = 1
+    elif list_of_coordinates[0] == 'B':
+        x_axis_coordinate = 2
+    elif list_of_coordinates[0] == 'C':
+        x_axis_coordinate = 3
+    elif list_of_coordinates[0] == 'D':
+        x_axis_coordinate = 4
+    elif list_of_coordinates[0] == 'E':
+        x_axis_coordinate = 5
+    y_axis_coordinate = int(list_of_coordinates[1])
     return [x_axis_coordinate, y_axis_coordinate]
 
 def read_coordinates():
@@ -34,7 +52,7 @@ def place_ships_on_map(ships):
     game_map = create_map()
     for ship in ships:
         [x_axis, y_axis] = read_coordinates()
-        mark_ship_on_map(game_map, ship)
+        mark_ship_on_map(game_map, ship, x_axis, y_axis)
         display_game_map(game_map)
     return game_map
 
@@ -50,15 +68,38 @@ def shoot_at_coordinates(game_map, x_axis, y_axis):
         print('You\'ve missed!')
         return
     if game_map[x_axis][y_axis] == REPRESENTATION_SHIP_ON_MAP:
-        game_map[x_axis][y_axis] = REPRESENTATION_HIT_ON_MAP:
-        print('You\'ve hit a ship!')
+        if ship_has_no_more_lives(game_map, x_axis, y_axis):
+            mark_ship_as_dead(game_map, x_axis, y_axis)
+        else:
+            game_map[x_axis][y_axis] = REPRESENTATION_HIT_ON_MAP
+            print('You\'ve hit a ship!')
+        return
+    print('You\'ve hit a previous place')
+    
+def display_enemy_map(game_map):
+    for row in game_map:
+        for cell in row:
+            if cell == REPRESENTATION_MISS_ON_MAP:
+                print('M')
+            elif cell == REPRESENTATION_SHIP_ON_MAP:
+                print('W') #W stands for water
+            elif cell == REPRESENTATION_MISS_ON_MAP:
+                print('M')
+
+def has_won(enemy_map):
+    pass
+
+def display_winner(shooting_player_map):
+    pass
 
 def main():
+    print('Player 1 turn to place ships on map!')
     map1 = place_ships_on_map(ships_for_player1)
     print('Player 2 turn to place ships on map!')
     map2 = place_ships_on_map(ships_for_player2)
 
     shooting_player_map = map1
+
     enemy_map = map2
     while True:
         display_current_player_turn(shooting_player_map, map1)
