@@ -11,6 +11,13 @@ def init_board():
         matrix.append(width_list)
     return matrix
 
+def onboard_coordinates(coordinates):
+    if coordinates[0] != 'A' or coordinates[0] != 'B' or coordinates[0] != 'C':
+        return False
+    elif coordinates[1] != '1' or coordinates[1] != '2' or coordinates[1] != '3':
+        return False
+    else:
+        return True
 
 def get_move():
     while True:
