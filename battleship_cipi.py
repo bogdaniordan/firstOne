@@ -22,7 +22,7 @@ def coordinates_in_valid_format(coordinates):
 def coordinate_are_inside_map(coordinates):
     list_of_coordinates = list(coordinates)
     f_index_alphabet = list(alphabet).index('F')
-    if list_of_coordinates[0] in list(alphabet)[f_index_alphabet:len(alphabet)] or int(list_of_coordinates[1]) > 5:
+    if list_of_coordinates[0] in list(alphabet)[(f_index_alphabet + 1):len(alphabet)] or int(list_of_coordinates[1]) > 5:
         print('Coordinates are outside the range of the map!')
         return False
     else:

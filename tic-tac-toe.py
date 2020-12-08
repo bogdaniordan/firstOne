@@ -1,6 +1,8 @@
 import random
 import sys
 import time
+import string
+alphabet = string.ascii_uppercase
 
 def init_board():
     matrix = []
@@ -19,45 +21,55 @@ def onboard_coordinates(coordinates):
     else:
         return True
 
-def get_move():
+def coordinates_inside_map(listed_coordinate):
+    c_index_alphabet = list(alphabet).index('C')
+    if listed_coordinate[0] in list(alphabet)[(c_index_alphabet + 1):len(alphabet)] or int(listed_coordinate[1]) > 3:
+        print('Coordinates are outside the range of the map!')
+        return False
+    else:
+        return True
+
+def coordinates_in_valid_format(listed_coordinate):
+    if list(listed_coordinate)[0] in list(alphabet) and list(listed_coordinate)[1].isdigit():
+        return True
+    else:
+        print('Coordinates are not in a valid format (e.g. A2)!')
+
+def coordinates_not_taken(listed_coordinate, board):
+    (move1, move2) = transform(listed_coordinate)
+    if board[move1][move2] == ' X ' or board[move1][move2] == ' O ':
+        print('The coordinate you selected is already taken!')
+        return False
+    else:
+        return True
+
+def transform(listed_coordinate):
+    if listed_coordinate[0] == 'A':
+        move1 = 1
+    elif listed_coordinate[0] == 'B':
+        move1= 3
+    elif listed_coordinate[0] == 'C':
+        move1 = 5
+    if listed_coordinate[1] == '1':
+        move2 = 1
+    elif listed_coordinate[1] == '2':
+        move2 = 3
+    elif listed_coordinate[1] == '3':
+        move2 = 5
+    coordinate_tuple = (move1, move2)
+    return coordinate_tuple   
+
+def get_move(board):
     while True:
-        # try:
-        try:
-            user_input = input('Please enter a coordinate (eg. A3): ')
-            listed_coordinate = list(user_input)
-            # if user_input != 'A1' or user_input != 'A2' or user_input != 'A3' or user_input != 'B1' or user_input != 'B2' or user_input != 'B3':
-            #     print('Please enter a valid coordinate')
-            #     # break
-            #     raise ValueError('Invalid coordinate')
-            #     # break
-        except ValueError:
-            print('Input must be a valid coordinate!')
-            break
-        # if user_input != 'A1' or user_input != 'A2' or user_input != 'A3' or user_input != 'B1' or user_input != 'B2' or user_input != 'B3':
-        #     print('Please enter a valid coordinate')
-        #     break
-        else:
-            if listed_coordinate[0] == 'A':
-                move1 = 1
-            elif listed_coordinate[0] == 'B':
-                move1= 3
-            elif listed_coordinate[0] == 'C':
-                move1 = 5
-            if listed_coordinate[1] == '1':
-                move2 = 1
-            elif listed_coordinate[1] == '2':
-                move2 = 3
-            elif listed_coordinate[1] == '3':
-                move2 = 5
-            coordinate_tuple = (move1, move2)
-                # if board[coordinate_tuple[0]][coordinate_tuple[1]] == ' X ' or board[coordinate_tuple[0]][coordinate_tuple[1]] == ' O ':
-                #     print('The field is already taken.')
-                    # break
-                # else:
-            return coordinate_tuple
-        # except ValueError as err:
-        #     print({err})
-        #     continue
+        user_input = input('Please enter a coordinate (eg. A3): ')
+        listed_coordinate = list(user_input)
+        if coordinates_in_valid_format(listed_coordinate):
+            if coordinates_inside_map(listed_coordinate):
+                if coordinates_not_taken(listed_coordinate, board):
+                    final_coordinates = transform(listed_coordinate)
+                    return final_coordinates
+
+
 
 
 def mark(board, player_input, player_turn, mode = None):
@@ -153,7 +165,7 @@ def tictactoe_game(mode = None):
         turn += 1
         if mode == 'HUMAN-AI':
             if turn % 2 == 1:
-                user_input = get_move()
+                user_input = get_move(board)
                 check_quit(user_input)
                 mark(board, user_input, turn)
             else:
@@ -161,7 +173,7 @@ def tictactoe_game(mode = None):
                 mark(board, ai_move, turn)
         elif mode == 'AI-HUMAN':
             if turn % 2 == 0:
-                user_input = get_move()
+                user_input = get_move(board)
                 check_quit(user_input)
                 mark(board, user_input, turn)
             else:
@@ -177,7 +189,7 @@ def tictactoe_game(mode = None):
                 ai_move = get_ai_move(board)
                 mark(board, ai_move, turn)
         else: 
-            user_input = get_move()
+            user_input = get_move(board)
             check_quit(user_input)
             mark(board, user_input, turn)
 
