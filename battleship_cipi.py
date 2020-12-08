@@ -16,11 +16,14 @@ def create_map():
 def coordinates_in_valid_format(coordinates):
     if list(coordinates)[0] in list(alphabet) and list(coordinates)[1].isdigit():
         return True
+    else:
+        print('Coordinates are not in a valid format (e.g. A2)!')
 
 def coordinate_are_inside_map(coordinates):
     list_of_coordinates = list(coordinates)
-    e_index_alphabet = list(alphabet).index('E')
-    if list_of_coordinates[0] in list(alphabet)[e_index_alphabet:len(alphabet)] or int(list_of_coordinates[1]) > 5:
+    f_index_alphabet = list(alphabet).index('F')
+    if list_of_coordinates[0] in list(alphabet)[f_index_alphabet:len(alphabet)] or int(list_of_coordinates[1]) > 5:
+        print('Coordinates are outside the range of the map!')
         return False
     else:
         return True
@@ -46,7 +49,17 @@ def read_coordinates():
         if coordinates_in_valid_format(coordinates):
             if coordinate_are_inside_map(coordinates):
                 [x_axis, y_axis] = transform_coordinates(coordinates)
+                print(x_axis, y_axis)
                 return [x_axis, y_axis]
+
+# read_coordinates()
+
+def mark_ship_on_map(board, ship, x_axis, y_axis):
+    board[x_axis][y_axis] = 'X'
+
+def display_game_map(board):
+    for row in board:
+        print(' '.join(row), end='\n')
 
 def place_ships_on_map(ships):
     game_map = create_map()
@@ -55,6 +68,8 @@ def place_ships_on_map(ships):
         mark_ship_on_map(game_map, ship, x_axis, y_axis)
         display_game_map(game_map)
     return game_map
+
+# place_ships_on_map((ships_for_player2))
 
 def display_current_player_turn(current_player_map, player_one_map):
     if current_player_map == player_one_map:
