@@ -1,8 +1,10 @@
 import string
+import os 
+
 alphabet = string.ascii_uppercase
 
 ships_for_player1 = [2,1]
-ships_for_player2 = [2,2,3,4]
+ships_for_player2 = [2,1]
 REPRESENTATION_WATER_ON_MAP = 0
 REPRESENTATION_MISS_ON_MAP = 'M'
 REPRESENTATION_SHIP_ON_MAP = 'X'
@@ -12,7 +14,9 @@ REPRESENATATION_SUNK_ON_MAP = 'S'
 def create_map():
     board = [[' ', '1', '2', '3', '4', '5'], ['A', '0', '0', '0', '0', '0'], ['B', '0', '0', '0', '0', '0'], ['C', '0', '0', '0', '0', '0'], ['D', '0', '0', '0', '0', '0'], ['E', '0', '0', '0', '0', '0']]
     return board
- 
+
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear') 
 
 def coordinates_in_valid_format(coordinates):
     if list(coordinates)[0] in list(alphabet) and list(coordinates)[1].isdigit():
@@ -50,13 +54,13 @@ def read_coordinates():
         if coordinates_in_valid_format(coordinates):
             if coordinate_are_inside_map(coordinates):
                 [x_axis, y_axis] = transform_coordinates(coordinates)
-                print(x_axis, y_axis)
+                # print(x_axis, y_axis)
                 return [x_axis, y_axis]
 
 # read_coordinates()
 
 def mark_ship_on_map(board, ship, x_axis, y_axis):
-    board[x_axis][y_axis] = REPRESENTATION_HIT_ON_MAP
+    board[x_axis][y_axis] = REPRESENTATION_SHIP_ON_MAP
 
 def display_game_map(board):
     for row in board:
@@ -74,7 +78,7 @@ def place_ships_on_map(ships):
         for unit in range(ship):
             [x_axis, y_axis] = read_coordinates()
             mark_ship_on_map(game_map, ship, x_axis, y_axis)
-            display_game_map(game_map)
+        display_game_map(game_map)
     return game_map
 
 # place_ships_on_map((ships_for_player2))
@@ -90,6 +94,11 @@ def ship_has_no_more_lives(board, x_axis, y_axis):
 
 def mark_ship_as_dead(board, x_axis, y_axis):
     board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
+    # if ship is bigger than 1 cell, it needs to mark the whole ship as dead. not only 1 cell
+    if board[x_axis][y_axis + 1] == REPRESENTATION_HIT_ON_MAP:
+        board[x_axis][y_axis + 1] = REPRESENATATION_SUNK_ON_MAP
+    elif board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
+        board[x_axis][y_axis - 1] = REPRESENATATION_SUNK_ON_MAP
 
 def shoot_at_coordinates(game_map, x_axis, y_axis):
     if game_map[x_axis][y_axis] == REPRESENTATION_WATER_ON_MAP:
@@ -109,11 +118,17 @@ def display_enemy_map(game_map):
     for row in game_map:
         for cell in row:
             if cell == REPRESENTATION_MISS_ON_MAP:
-                print('M')
+                cell = REPRESENTATION_MISS_ON_MAP
             elif cell == REPRESENTATION_SHIP_ON_MAP:
-                print('X') #W stands for water
-            elif cell == REPRESENTATION_MISS_ON_MAP:
-                print('M')
+                cell = REPRESENTATION_WATER_ON_MAP
+            elif cell == REPRESENATATION_SUNK_ON_MAP:
+                cell = REPRESENATATION_SUNK_ON_MAP
+            elif cell == REPRESENTATION_HIT_ON_MAP:
+                cell = REPRESENTATION_HIT_ON_MAP
+            else:
+                cell = REPRESENTATION_WATER_ON_MAP
+    for row in game_map:
+        print(' '.join(row), end='\n')
 
 def has_won(enemy_map):
     pass
@@ -122,11 +137,11 @@ def display_winner(shooting_player_map):
     pass
 
 def main():
-    print('First placement phase!')
+    print('=== First placement phase! ===')
     map1 = place_ships_on_map(ships_for_player1)
-    print('Next player\'s placement phase!')
+    print('=== Next player\'s placement phase! ===')
     map2 = place_ships_on_map(ships_for_player2)
-
+    #TREBUIE BAGATA FUNCTIE DE CLEAR TERMINAL
     shooting_player_map = map1
 
     enemy_map = map2
@@ -135,6 +150,7 @@ def main():
         [x_axis, y_axis] = read_coordinates()
         shoot_at_coordinates(enemy_map, x_axis, y_axis)
         display_enemy_map(enemy_map)
+        # display_game_map(enemy_map)
         if has_won(enemy_map):
             display_winner(shooting_player_map)
             return 
