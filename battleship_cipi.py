@@ -3,7 +3,7 @@ import os
 
 alphabet = string.ascii_uppercase
 
-ships_for_player1 = [2,1]
+ships_for_player1 = [2,2]
 ships_for_player2 = [2,1]
 REPRESENTATION_WATER_ON_MAP = '0'
 REPRESENTATION_MISS_ON_MAP = 'M'
@@ -94,20 +94,26 @@ def display_current_player_turn(current_player_map, player_one_map):
         return second_player
 
 def ship_has_no_more_lives(board, x_axis, y_axis):
-    #i have to know the coordinates of the ship
+    for row in board:
+        if board[x_axis][y_axis] ==  row[-1]:
+            return True
     if board[x_axis][y_axis + 1] != REPRESENTATION_SHIP_ON_MAP and board[x_axis][y_axis - 1] != REPRESENTATION_SHIP_ON_MAP:
         return True
     else:
         return False
 
 def mark_ship_as_dead(board, x_axis, y_axis):
-    board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
-    # if ship is bigger than 1 cell, it needs to mark the whole ship as dead. not only 1 cell
-    if board[x_axis][y_axis + 1] == REPRESENTATION_HIT_ON_MAP:
-        board[x_axis][y_axis + 1] = REPRESENATATION_SUNK_ON_MAP
-    elif board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
-        board[x_axis][y_axis - 1] = REPRESENATATION_SUNK_ON_MAP
-    return board
+    try:
+        board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
+        # if ship is bigger than 1 cell, it needs to mark the whole ship as dead. not only 1 cell
+        if board[x_axis][y_axis + 1] == REPRESENTATION_HIT_ON_MAP:
+            board[x_axis][y_axis + 1] = REPRESENATATION_SUNK_ON_MAP
+        elif board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
+            board[x_axis][y_axis - 1] = REPRESENATATION_SUNK_ON_MAP
+        return board
+    except IndexError as err:
+        print(f'{err}')
+
 
 def shoot_at_coordinates(game_map, x_axis, y_axis):
     if game_map[x_axis][y_axis] == REPRESENTATION_WATER_ON_MAP:
