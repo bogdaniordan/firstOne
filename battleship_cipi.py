@@ -84,10 +84,14 @@ def place_ships_on_map(ships):
 # place_ships_on_map((ships_for_player2))
 
 def display_current_player_turn(current_player_map, player_one_map):
+    first_player = 'Player 1'
+    second_player = 'Player 2'
     if current_player_map == player_one_map:
         print('Player 1 is shooting now!')
+        return first_player
     else:
         print('Player 2 is shooting now!')
+        return second_player
 
 def ship_has_no_more_lives(board, x_axis, y_axis):
     #i have to know the coordinates of the ship
@@ -148,8 +152,8 @@ def has_lost(enemy_map):
         return False
 
 
-def display_winner(shooting_player_map):
-    print(f'{shooting_player_map} has won!')
+def display_winner(player_turn):
+    print(f'{player_turn} has won!')
 
 def main():
     print('=== First placement phase! ===')
@@ -163,13 +167,13 @@ def main():
 
     enemy_map = map2
     while True:
-        display_current_player_turn(shooting_player_map, map1)
+        player_turn = display_current_player_turn(shooting_player_map, map1)
         [x_axis, y_axis] = read_coordinates()
         shoot_at_coordinates(enemy_map, x_axis, y_axis)
         display_enemy_map(enemy_map)
         # display_game_map(enemy_map)
         if has_lost(enemy_map):
-            display_winner(shooting_player_map)
+            display_winner(player_turn)
             return 
         temp = shooting_player_map
         shooting_player_map = enemy_map
