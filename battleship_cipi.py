@@ -5,7 +5,7 @@ alphabet = string.ascii_uppercase
 
 ships_for_player1 = [2,1]
 ships_for_player2 = [2,1]
-REPRESENTATION_WATER_ON_MAP = 0
+REPRESENTATION_WATER_ON_MAP = '0'
 REPRESENTATION_MISS_ON_MAP = 'M'
 REPRESENTATION_SHIP_ON_MAP = 'X'
 REPRESENTATION_HIT_ON_MAP = 'H'
@@ -90,7 +90,11 @@ def display_current_player_turn(current_player_map, player_one_map):
         print('Player 2 is shooting now!')
 
 def ship_has_no_more_lives(board, x_axis, y_axis):
-    pass
+    #i have to know the coordinates of the ship
+    if board[x_axis][y_axis + 1] != REPRESENTATION_SHIP_ON_MAP and board[x_axis][y_axis - 1] != REPRESENTATION_SHIP_ON_MAP:
+        return True
+    else:
+        return False
 
 def mark_ship_as_dead(board, x_axis, y_axis):
     board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
@@ -99,6 +103,7 @@ def mark_ship_as_dead(board, x_axis, y_axis):
         board[x_axis][y_axis + 1] = REPRESENATATION_SUNK_ON_MAP
     elif board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
         board[x_axis][y_axis - 1] = REPRESENATATION_SUNK_ON_MAP
+    return board
 
 def shoot_at_coordinates(game_map, x_axis, y_axis):
     if game_map[x_axis][y_axis] == REPRESENTATION_WATER_ON_MAP:
@@ -127,21 +132,33 @@ def display_enemy_map(game_map):
                 cell = REPRESENTATION_HIT_ON_MAP
             else:
                 cell = REPRESENTATION_WATER_ON_MAP
-    for row in game_map:
-        print(' '.join(row), end='\n')
+    display_game_map(game_map)
+    
 
-def has_won(enemy_map):
-    pass
+def has_lost(enemy_map):
+    sunk_count = []
+    sunk_marks_number = sum(ships_for_player1)
+    for row in enemy_map:
+        for cell in row:
+            if cell == REPRESENATATION_SUNK_ON_MAP:
+                sunk_count.append(cell)
+    if len(sunk_count) == sunk_marks_number:
+        return True
+    else:
+        return False
+
 
 def display_winner(shooting_player_map):
-    pass
+    print(f'{shooting_player_map} has won!')
 
 def main():
     print('=== First placement phase! ===')
     map1 = place_ships_on_map(ships_for_player1)
     print('=== Next player\'s placement phase! ===')
     map2 = place_ships_on_map(ships_for_player2)
-    #TREBUIE BAGATA FUNCTIE DE CLEAR TERMINAL
+    #clear terminal?
+    # clear_terminal()
+
     shooting_player_map = map1
 
     enemy_map = map2
@@ -151,7 +168,7 @@ def main():
         shoot_at_coordinates(enemy_map, x_axis, y_axis)
         display_enemy_map(enemy_map)
         # display_game_map(enemy_map)
-        if has_won(enemy_map):
+        if has_lost(enemy_map):
             display_winner(shooting_player_map)
             return 
         temp = shooting_player_map

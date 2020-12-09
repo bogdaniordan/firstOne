@@ -62,6 +62,8 @@ def transform(listed_coordinate):
 def get_move(board):
     while True:
         user_input = input('Please enter a coordinate (eg. A3): ')
+        if user_input == 'quit':
+            return
         listed_coordinate = list(user_input)
         if coordinates_in_valid_format(listed_coordinate):
             if coordinates_inside_map(listed_coordinate):
