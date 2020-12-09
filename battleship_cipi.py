@@ -3,7 +3,7 @@ import os
 
 alphabet = string.ascii_uppercase
 
-ships_for_player1 = [2,2]
+ships_for_player1 = [2,1]
 ships_for_player2 = [2,1]
 REPRESENTATION_WATER_ON_MAP = '0'
 REPRESENTATION_MISS_ON_MAP = 'M'
@@ -48,6 +48,9 @@ def transform_coordinates(coordinates):
     y_axis_coordinate = int(list_of_coordinates[1])
     return [x_axis_coordinate, y_axis_coordinate]
 
+# def ships_not_too_close(board, x_axis, y_axis):
+#     if board[x_axis][y_axis + 1] or board[x_axis][y_axis - 1]  
+
 def read_coordinates():
     while True:
         coordinates = input('Please enter coordinates in the form [letter][digit]: ')
@@ -67,8 +70,6 @@ def display_game_map(board):
         print(' '.join(row), end='\n')
 
 def place_ships_on_map(ships):
-    # ships_number = len(ships)
-    # print('You have {ships_number} ships.')
     count = 0
     game_map = create_map()
     display_game_map(game_map)
@@ -132,17 +133,30 @@ def shoot_at_coordinates(game_map, x_axis, y_axis):
 def display_enemy_map(game_map):
     for row in game_map:
         for cell in row:
-            if cell == REPRESENTATION_MISS_ON_MAP:
-                cell = REPRESENTATION_MISS_ON_MAP
-            elif cell == REPRESENTATION_SHIP_ON_MAP:
-                cell = REPRESENTATION_WATER_ON_MAP
-            elif cell == REPRESENATATION_SUNK_ON_MAP:
-                cell = REPRESENATATION_SUNK_ON_MAP
-            elif cell == REPRESENTATION_HIT_ON_MAP:
-                cell = REPRESENTATION_HIT_ON_MAP
-            else:
-                cell = REPRESENTATION_WATER_ON_MAP
-    display_game_map(game_map)
+            # if cell == REPRESENTATION_MISS_ON_MAP:
+            #     row[i] = REPRESENTATION_MISS_ON_MAP
+            # elif cell == REPRESENTATION_SHIP_ON_MAP:
+            #     row[i] = REPRESENTATION_WATER_ON_MAP
+            # elif cell == REPRESENTATION_MISS_ON_MAP:
+            #     row[i] = REPRESENTATION_MISS_ON_MAP
+            # elif cell == REPRESENATATION_SUNK_ON_MAP:
+            #     row[i] = REPRESENATATION_SUNK_ON_MAP
+            # elif cell == REPRESENTATION_HIT_ON_MAP:
+            #     row[i] = REPRESENTATION_HIT_ON_MAP
+            if (cell == REPRESENATATION_SUNK_ON_MAP):
+                print(REPRESENATATION_SUNK_ON_MAP)
+            elif (cell == REPRESENTATION_SHIP_ON_MAP):
+                print(REPRESENTATION_WATER_ON_MAP)
+            elif (cell == REPRESENTATION_MISS_ON_MAP):
+                print(REPRESENTATION_MISS_ON_MAP)
+            elif (cell == REPRESENTATION_HIT_ON_MAP):
+                print(REPRESENTATION_HIT_ON_MAP)
+
+
+
+
+    # display_game_map(game_map)
+    
     
 
 def has_lost(enemy_map):
@@ -164,7 +178,7 @@ def display_winner(player_turn):
 def main():
     print('=== First placement phase! ===')
     map1 = place_ships_on_map(ships_for_player1)
-    print('=== Next player\'s placement phase! ===')
+    input('=== Next player\'s placement phase! ===')
     map2 = place_ships_on_map(ships_for_player2)
     #clear terminal?
     # clear_terminal()
