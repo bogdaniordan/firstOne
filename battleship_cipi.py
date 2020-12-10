@@ -131,30 +131,44 @@ def shoot_at_coordinates(game_map, x_axis, y_axis):
     print('You\'ve hit a previous place')
     
 def display_enemy_map(game_map):
+    # for row in game_map:
+    #     for cell, i in enumerate(row):
+    #         if cell == REPRESENTATION_MISS_ON_MAP:
+    #             row[i] = REPRESENTATION_MISS_ON_MAP
+    #         elif cell == REPRESENTATION_SHIP_ON_MAP:
+    #             row[i] = REPRESENTATION_WATER_ON_MAP
+    #         elif cell == REPRESENATATION_SUNK_ON_MAP:
+    #             row[i] = REPRESENATATION_SUNK_ON_MAP
+    #         elif cell == REPRESENTATION_HIT_ON_MAP:
+    #             row[i] = REPRESENTATION_HIT_ON_MAP
+    # for i, x in enumerate(game_map):
+    #     for j,a  in enumerate(x):
+    #         if REPRESENTATION_SHIP_ON_MAP in a:
+    #             game_map[i][j].replace(REPRESENTATION_SHIP_ON_MAP, REPRESENTATION_WATER_ON_MAP)
+    # game_map = [[i, j if j != REPRESENTATION_SHIP_ON_MAP else REPRESENTATION_WATER_ON_MAP] for i, j in game_map]
+    [list(map(lambda x: x if x != REPRESENTATION_SHIP_ON_MAP else REPRESENTATION_WATER_ON_MAP, i)) for i in game_map]
+
     for row in game_map:
-        for cell in row:
-            # if cell == REPRESENTATION_MISS_ON_MAP:
-            #     row[i] = REPRESENTATION_MISS_ON_MAP
-            # elif cell == REPRESENTATION_SHIP_ON_MAP:
-            #     row[i] = REPRESENTATION_WATER_ON_MAP
-            # elif cell == REPRESENTATION_MISS_ON_MAP:
-            #     row[i] = REPRESENTATION_MISS_ON_MAP
-            # elif cell == REPRESENATATION_SUNK_ON_MAP:
-            #     row[i] = REPRESENATATION_SUNK_ON_MAP
-            # elif cell == REPRESENTATION_HIT_ON_MAP:
-            #     row[i] = REPRESENTATION_HIT_ON_MAP
-            if (cell == REPRESENATATION_SUNK_ON_MAP):
-                print(REPRESENATATION_SUNK_ON_MAP)
-            elif (cell == REPRESENTATION_SHIP_ON_MAP):
-                print(REPRESENTATION_WATER_ON_MAP)
-            elif (cell == REPRESENTATION_MISS_ON_MAP):
-                print(REPRESENTATION_MISS_ON_MAP)
-            elif (cell == REPRESENTATION_HIT_ON_MAP):
-                print(REPRESENTATION_HIT_ON_MAP)
-
-
-
-
+        print(' '.join(row), end='\n')
+    # display_game_map(game_map)
+    # for row in game_map:
+    #     for cell, i in enumerate(row):
+    #         if cell == REPRESENTATION_WATER_ON_MAP:
+    #             row[i] = REPRESENTATION_SHIP_ON_MAP
+    #         # elif cell == REPRESENTATION_MISS_ON_MAP:
+    #         #     row[i] = REPRESENTATION_MISS_ON_MAP
+    #         # elif cell == REPRESENATATION_SUNK_ON_MAP:
+    #         #     row[i] = REPRESENATATION_SUNK_ON_MAP
+    #         # elif cell == REPRESENTATION_HIT_ON_MAP:
+    #         #     row[i] = REPRESENTATION_HIT_ON_MAP
+            # if (cell == REPRESENATATION_SUNK_ON_MAP):
+            #     print(REPRESENATATION_SUNK_ON_MAP)
+            # elif (cell == REPRESENTATION_SHIP_ON_MAP):
+            #     print(REPRESENTATION_WATER_ON_MAP)
+            # elif (cell == REPRESENTATION_MISS_ON_MAP):
+            #     print(REPRESENTATION_MISS_ON_MAP)
+            # elif (cell == REPRESENTATION_HIT_ON_MAP):
+            #     print(REPRESENTATION_HIT_ON_MAP)
     # display_game_map(game_map)
     
     
@@ -175,23 +189,45 @@ def has_lost(enemy_map):
 def display_winner(player_turn):
     print(f'{player_turn} has won!')
 
+def turn_is_valid(turn_input):
+    if turn_input < 5 or turn_input > 50:
+        print('Invalid input!')
+        return False
+    else:
+        return True
+
+def ask_for_turn():
+    user_input = int(input('Please enter a turn limit: '))
+    if turn_is_valid(user_input):
+        return user_input
+
+def turn_printer(turn):
+    print(f'Turns left: {turn}')
+
+
+
 def main():
     print('=== First placement phase! ===')
     map1 = place_ships_on_map(ships_for_player1)
     input('=== Next player\'s placement phase! ===')
     map2 = place_ships_on_map(ships_for_player2)
-    #clear terminal?
-    # clear_terminal()
+    turns = ask_for_turn()
+    turn_printer(turns)
 
     shooting_player_map = map1
-
     enemy_map = map2
     while True:
         player_turn = display_current_player_turn(shooting_player_map, map1)
         [x_axis, y_axis] = read_coordinates()
         shoot_at_coordinates(enemy_map, x_axis, y_axis)
+
         display_enemy_map(enemy_map)
-        # display_game_map(enemy_map)
+        turns -= 1
+        turn_printer(turns)
+        
+        if turns == 0:
+            print('No more turns, it\'s a draw')
+            return
         if has_lost(enemy_map):
             display_winner(player_turn)
             return 
