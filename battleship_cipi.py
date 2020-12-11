@@ -50,8 +50,6 @@ def transform_coordinates(coordinates):
     y_axis_coordinate = int(list_of_coordinates[1])
     return [x_axis_coordinate, y_axis_coordinate]
 
-# def ships_not_too_close(board, x_axis, y_axis):
-#     if board[x_axis][y_axis + 1] or board[x_axis][y_axis - 1]  
 
 def read_coordinates():
     while True:
@@ -62,7 +60,7 @@ def read_coordinates():
                 # print(x_axis, y_axis)
                 return [x_axis, y_axis]
 
-# read_coordinates()
+
 
 def mark_ship_on_map(board, ship, x_axis, y_axis):
     board[x_axis][y_axis] = REPRESENTATION_SHIP_ON_MAP
@@ -84,7 +82,7 @@ def place_ships_on_map(ships):
         display_game_map(game_map)
     return game_map
 
-# place_ships_on_map((ships_for_player2))
+
 
 def display_current_player_turn(current_player_map, player_one_map):
     first_player = 'Player 1'
@@ -110,7 +108,6 @@ def ship_has_no_more_lives(board, x_axis, y_axis):
 def mark_ship_as_dead(board, x_axis, y_axis):
     try:
         board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
-        # if ship is bigger than 1 cell, it needs to mark the whole ship as dead. not only 1 cell
         if board[x_axis][y_axis + 1] == REPRESENTATION_HIT_ON_MAP:
             board[x_axis][y_axis + 1] = REPRESENATATION_SUNK_ON_MAP
         elif board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
@@ -128,13 +125,14 @@ def shoot_at_coordinates(game_map, x_axis, y_axis):
     if game_map[x_axis][y_axis] == REPRESENTATION_SHIP_ON_MAP:
         if ship_has_no_more_lives(game_map, x_axis, y_axis):
             mark_ship_as_dead(game_map, x_axis, y_axis)
-            print('You\ve sunk a ship!')
+            print('You\'ve sunk a ship!')
         else:
             game_map[x_axis][y_axis] = REPRESENTATION_HIT_ON_MAP
             print('You\'ve hit a ship!')
         return
     print('You\'ve hit a previous place')
     
+
 def display_enemy_map(game_map):
     saved_matrix = deepcopy(game_map)
     for row in saved_matrix:
@@ -170,6 +168,7 @@ def has_lost(enemy_map):
 def display_winner(player_turn):
     print(f'{player_turn} has won!')
 
+
 def turn_is_valid(turn_input):
     if turn_input < 5 or turn_input > 50:
         print('Invalid input! (must be between 5-50)')
@@ -177,10 +176,12 @@ def turn_is_valid(turn_input):
     else:
         return True
 
+
 def ask_for_turn():
     user_input = int(input('Please enter a turn limit: '))
     if turn_is_valid(user_input):
         return user_input
+
 
 def turn_printer(turn):
     print(f'Turns left: {turn}')
