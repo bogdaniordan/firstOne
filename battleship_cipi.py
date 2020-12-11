@@ -136,13 +136,6 @@ def shoot_at_coordinates(game_map, x_axis, y_axis):
     print('You\'ve hit a previous place')
     
 def display_enemy_map(game_map):
- 
-    # for i, x in enumerate(game_map):
-    #     for j,a  in enumerate(x):
-    #         if REPRESENTATION_SHIP_ON_MAP in a:
-    #             game_map[i][j].replace(REPRESENTATION_SHIP_ON_MAP, REPRESENTATION_WATER_ON_MAP)
-    # # game_map = [[i, j if j != REPRESENTATION_SHIP_ON_MAP else REPRESENTATION_WATER_ON_MAP] for i, j in game_map]
-    # [list(map(lambda x: x if x != REPRESENTATION_SHIP_ON_MAP else REPRESENTATION_WATER_ON_MAP, i)) for i in game_map]
     saved_matrix = deepcopy(game_map)
     for row in saved_matrix:
         for i in range(len(row)):
@@ -157,27 +150,7 @@ def display_enemy_map(game_map):
             elif row[i] == REPRESENTATION_WATER_ON_MAP:
                 row[i] = REPRESENTATION_WATER_ON_MAP
     display_game_map(saved_matrix)
-    # display_game_map(game_map)
-    # display_game_map(game_map)
-    # for row in game_map:
-    #     for cell, i in enumerate(row):
-    #         if cell == REPRESENTATION_WATER_ON_MAP:
-    #             row[i] = REPRESENTATION_SHIP_ON_MAP
-    #         # elif cell == REPRESENTATION_MISS_ON_MAP:
-    #         #     row[i] = REPRESENTATION_MISS_ON_MAP
-    #         # elif cell == REPRESENATATION_SUNK_ON_MAP:
-    #         #     row[i] = REPRESENATATION_SUNK_ON_MAP
-    #         # elif cell == REPRESENTATION_HIT_ON_MAP:
-    #         #     row[i] = REPRESENTATION_HIT_ON_MAP
-            # if (cell == REPRESENATATION_SUNK_ON_MAP):
-            #     print(REPRESENATATION_SUNK_ON_MAP)
-            # elif (cell == REPRESENTATION_SHIP_ON_MAP):
-            #     print(REPRESENTATION_WATER_ON_MAP)
-            # elif (cell == REPRESENTATION_MISS_ON_MAP):
-            #     print(REPRESENTATION_MISS_ON_MAP)
-            # elif (cell == REPRESENTATION_HIT_ON_MAP):
-            #     print(REPRESENTATION_HIT_ON_MAP)
-    # display_game_map(game_map)
+ 
     
     
 
