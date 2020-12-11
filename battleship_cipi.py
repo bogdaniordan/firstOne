@@ -19,10 +19,11 @@ def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear') 
 
 def coordinates_in_valid_format(coordinates):
-    if list(coordinates)[0] in list(alphabet) and list(coordinates)[1].isdigit():
+    if list(coordinates)[0] in list(alphabet) and list(coordinates)[1].isdigit() and len(coordinates) == 2:
         return True
     else:
         print('Invalid input, coordinates are not in a valid format (e.g. A2)!')
+        return False
 
 def coordinate_are_inside_map(coordinates):
     list_of_coordinates = list(coordinates)
@@ -94,14 +95,16 @@ def display_current_player_turn(current_player_map, player_one_map):
         print('Player 2 is shooting now!')
         return second_player
 
+
 def ship_has_no_more_lives(board, x_axis, y_axis):
     for row in board:
-        if board[x_axis][y_axis] ==  row[-1]:
+        if board[x_axis][y_axis] == row[-1]:
             return True
     if board[x_axis][y_axis + 1] != REPRESENTATION_SHIP_ON_MAP and board[x_axis][y_axis - 1] != REPRESENTATION_SHIP_ON_MAP:
         return True
     else:
         return False
+
 
 def mark_ship_as_dead(board, x_axis, y_axis):
     try:
@@ -124,6 +127,7 @@ def shoot_at_coordinates(game_map, x_axis, y_axis):
     if game_map[x_axis][y_axis] == REPRESENTATION_SHIP_ON_MAP:
         if ship_has_no_more_lives(game_map, x_axis, y_axis):
             mark_ship_as_dead(game_map, x_axis, y_axis)
+            print('You\ve sunk a ship!')
         else:
             game_map[x_axis][y_axis] = REPRESENTATION_HIT_ON_MAP
             print('You\'ve hit a ship!')
@@ -145,8 +149,8 @@ def display_enemy_map(game_map):
     #     for j,a  in enumerate(x):
     #         if REPRESENTATION_SHIP_ON_MAP in a:
     #             game_map[i][j].replace(REPRESENTATION_SHIP_ON_MAP, REPRESENTATION_WATER_ON_MAP)
-    # game_map = [[i, j if j != REPRESENTATION_SHIP_ON_MAP else REPRESENTATION_WATER_ON_MAP] for i, j in game_map]
-    [list(map(lambda x: x if x != REPRESENTATION_SHIP_ON_MAP else REPRESENTATION_WATER_ON_MAP, i)) for i in game_map]
+    # # game_map = [[i, j if j != REPRESENTATION_SHIP_ON_MAP else REPRESENTATION_WATER_ON_MAP] for i, j in game_map]
+    # [list(map(lambda x: x if x != REPRESENTATION_SHIP_ON_MAP else REPRESENTATION_WATER_ON_MAP, i)) for i in game_map]
 
     for row in game_map:
         print(' '.join(row), end='\n')
@@ -191,7 +195,7 @@ def display_winner(player_turn):
 
 def turn_is_valid(turn_input):
     if turn_input < 5 or turn_input > 50:
-        print('Invalid input!')
+        print('Invalid input! (must be between 5-50)')
         return False
     else:
         return True
