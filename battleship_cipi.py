@@ -146,14 +146,16 @@ def display_enemy_map(game_map):
     saved_matrix = deepcopy(game_map)
     for row in saved_matrix:
         for i in range(len(row)):
-            # if row[i] == REPRESENTATION_MISS_ON_MAP:
-            #     row[i] = REPRESENTATION_MISS_ON_MAP
-            if row[i] == REPRESENTATION_SHIP_ON_MAP:
+            if row[i] == REPRESENTATION_MISS_ON_MAP:
+                row[i] = REPRESENTATION_MISS_ON_MAP
+            elif row[i] == REPRESENTATION_SHIP_ON_MAP:
                 row[i] = REPRESENTATION_WATER_ON_MAP
-            # elif row[i] == REPRESENATATION_SUNK_ON_MAP:
-            #     row[i] = REPRESENATATION_SUNK_ON_MAP
-            # elif row[i] == REPRESENTATION_HIT_ON_MAP:
-            #     row[i] = REPRESENTATION_HIT_ON_MAP
+            elif row[i] == REPRESENATATION_SUNK_ON_MAP:
+                row[i] = REPRESENATATION_SUNK_ON_MAP
+            elif row[i] == REPRESENTATION_HIT_ON_MAP:
+                row[i] = REPRESENTATION_HIT_ON_MAP
+            elif row[i] == REPRESENTATION_WATER_ON_MAP:
+                row[i] = REPRESENTATION_WATER_ON_MAP
     display_game_map(saved_matrix)
     # display_game_map(game_map)
     # display_game_map(game_map)
