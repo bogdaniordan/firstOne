@@ -57,7 +57,6 @@ def read_coordinates():
         if coordinates_in_valid_format(coordinates):
             if coordinate_are_inside_map(coordinates):
                 [x_axis, y_axis] = transform_coordinates(coordinates)
-                # print(x_axis, y_axis)
                 return [x_axis, y_axis]
 
 
@@ -96,13 +95,32 @@ def display_current_player_turn(current_player_map, player_one_map):
 
 
 def ship_has_no_more_lives(board, x_axis, y_axis):
-    for row in board:
-        if board[x_axis][y_axis] == row[-1]:
+    try:
+        if board[x_axis][y_axis + 1] != REPRESENTATION_SHIP_ON_MAP and board[x_axis][y_axis - 1] != REPRESENTATION_SHIP_ON_MAP:
             return True
-    if board[x_axis][y_axis + 1] != REPRESENTATION_SHIP_ON_MAP and board[x_axis][y_axis - 1] != REPRESENTATION_SHIP_ON_MAP:
+        else:
+            return False
+    except IndexError:
         return True
-    else:
-        return False
+        # for row in board:
+        #     if board[x_axis][y_axis] == row[0] and row[0] != REPRESENTATION_SHIP_ON_MAP:
+        #         return True
+        #     elif board[x_axis][y_axis] == row[-1] and row[-1] != REPRESENTATION_SHIP_ON_MAP:
+        #         return True
+        # if [y_axis + 1] < len(board[0]):
+        #     return True
+        # elif board[x_axis][y_axis - 1] != REPRESENTATION_SHIP_ON_MAP:
+        #     return True
+
+
+
+def border_ship(board, x_axis, y_axis):
+    if board[x_axis][y_axis] == board[1][0] or board[x_axis][y_axis] == board[2][0] or board[x_axis][y_axis] == board[3][0] or board[x_axis][y_axis] == board[4][0] or board[x_axis][y_axis] == board[5][0] or board[x_axis][y_axis] == board[1][-1] or board[x_axis][y_axis] == [2][-1] or board[x_axis][y_axis] == board[3][-1] or board[x_axis][y_axis] == board[4][-1] or board[x_axis][y_axis] == board[5][-1]:
+        return True
+
+
+def mark_border_ship(board, x_axis, y_axis):
+    board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
 
 
 def mark_ship_as_dead(board, x_axis, y_axis):
@@ -123,9 +141,13 @@ def shoot_at_coordinates(game_map, x_axis, y_axis):
         print('You\'ve missed!')
         return
     if game_map[x_axis][y_axis] == REPRESENTATION_SHIP_ON_MAP:
+        # if border_ship(game_map, x_axis, y_axis):
+        #     mark_border_ship(game_map, x_axis, y_axis)
+        #     return
         if ship_has_no_more_lives(game_map, x_axis, y_axis):
             mark_ship_as_dead(game_map, x_axis, y_axis)
             print('You\'ve sunk a ship!')
+            return
         else:
             game_map[x_axis][y_axis] = REPRESENTATION_HIT_ON_MAP
             print('You\'ve hit a ship!')
@@ -149,8 +171,7 @@ def display_enemy_map(game_map):
                 row[i] = REPRESENTATION_WATER_ON_MAP
     display_game_map(saved_matrix)
  
-    
-    
+       
 
 def has_lost(enemy_map):
     sunk_count = []
