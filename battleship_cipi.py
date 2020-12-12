@@ -101,26 +101,13 @@ def ship_has_no_more_lives(board, x_axis, y_axis):
         else:
             return False
     except IndexError:
-        return True
-        # for row in board:
-        #     if board[x_axis][y_axis] == row[0] and row[0] != REPRESENTATION_SHIP_ON_MAP:
-        #         return True
-        #     elif board[x_axis][y_axis] == row[-1] and row[-1] != REPRESENTATION_SHIP_ON_MAP:
-        #         return True
-        # if [y_axis + 1] < len(board[0]):
-        #     return True
-        # elif board[x_axis][y_axis - 1] != REPRESENTATION_SHIP_ON_MAP:
-        #     return True
+        if y_axis == 5:
+            if board[x_axis][y_axis - 1] == REPRESENTATION_WATER_ON_MAP or board[x_axis][y_axis - 1] == REPRESENTATION_MISS_ON_MAP:
+                return True
+        elif y_axis == 0:
+            if board[x_axis][y_axis + 1] == REPRESENTATION_WATER_ON_MAP or board[x_axis][y_axis + 1] == REPRESENTATION_MISS_ON_MAP:
+                return True
 
-
-
-def border_ship(board, x_axis, y_axis):
-    if board[x_axis][y_axis] == board[1][0] or board[x_axis][y_axis] == board[2][0] or board[x_axis][y_axis] == board[3][0] or board[x_axis][y_axis] == board[4][0] or board[x_axis][y_axis] == board[5][0] or board[x_axis][y_axis] == board[1][-1] or board[x_axis][y_axis] == [2][-1] or board[x_axis][y_axis] == board[3][-1] or board[x_axis][y_axis] == board[4][-1] or board[x_axis][y_axis] == board[5][-1]:
-        return True
-
-
-def mark_border_ship(board, x_axis, y_axis):
-    board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
 
 
 def mark_ship_as_dead(board, x_axis, y_axis):
@@ -141,9 +128,6 @@ def shoot_at_coordinates(game_map, x_axis, y_axis):
         print('You\'ve missed!')
         return
     if game_map[x_axis][y_axis] == REPRESENTATION_SHIP_ON_MAP:
-        # if border_ship(game_map, x_axis, y_axis):
-        #     mark_border_ship(game_map, x_axis, y_axis)
-        #     return
         if ship_has_no_more_lives(game_map, x_axis, y_axis):
             mark_ship_as_dead(game_map, x_axis, y_axis)
             print('You\'ve sunk a ship!')
