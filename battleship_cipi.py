@@ -222,5 +222,6 @@ def main():
         shooting_player_map = enemy_map
         enemy_map = temp
 
+
 if __name__ == "__main__":
     main()
