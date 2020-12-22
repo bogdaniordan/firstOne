@@ -18,16 +18,15 @@ def create_map(height, width):
     matrix = []
     first_row = []
     first_row.append(' ')
-    for item in range(width+1):
+    for item in range(1, width+1):
         first_row.append(str(item))
     matrix.append(first_row)
     for i in range(height):
-        lst = []
-        lst.append(alphabet[i])
-        for i in range(6):
-            lst.append(' ')
-        matrix.append(lst)
-    # print(matrix)
+        other_row = []
+        other_row.append(alphabet[i])
+        for i in range(width):
+            other_row.append(REPRESENTATION_WATER_ON_MAP)
+        matrix.append(other_row)
     return matrix
 
 def clear_terminal():
@@ -45,7 +44,7 @@ def coordinates_in_valid_format(coordinates):
 def coordinate_are_inside_map(coordinates):
     list_of_coordinates = list(coordinates)
     f_index_alphabet = list(alphabet).index('F')
-    if list_of_coordinates[0] in list(alphabet)[(f_index_alphabet + 1):len(alphabet)] or int(list_of_coordinates[1]) > 5:
+    if list_of_coordinates[0] in list(alphabet)[(f_index_alphabet + 1):len(alphabet)] or int(list_of_coordinates[1]) > 10:
         print('Coordinates are outside the range of the map!')
         return False
     else:
@@ -84,10 +83,10 @@ def display_game_map(board):
     for row in board:
         print(' '.join(row), end='\n')
 
-def place_ships_on_map(ships):
+def place_ships_on_map(ships, board_height, board_width):
     ship_coordinates = []
     count = 0
-    game_map = create_map()
+    game_map = create_map(board_height, board_width)
     display_game_map(game_map)
     for ship in ships:
         long_ship_incrementer = 0
@@ -97,20 +96,20 @@ def place_ships_on_map(ships):
         while ship_length_counter < ship:
             [x_axis, y_axis] = read_coordinates()
             if ship == 1:
-                if check(game_map, x_axis, y_axis, ship_coordinates):
+                if short_ship_check(game_map, x_axis, y_axis, ship_coordinates):
                     ship_coordinates .append((x_axis, y_axis))
                     mark_ship_on_map(game_map, ship, x_axis, y_axis)
                     ship_length_counter += 1
             elif ship == 2:
                 if long_ship_incrementer == 0:
-                    if check(game_map, x_axis, y_axis, ship_coordinates):
+                    if short_ship_check(game_map, x_axis, y_axis, ship_coordinates):
                         ship_coordinates .append((x_axis, y_axis))
                         mark_ship_on_map(game_map, ship, x_axis, y_axis)
                         ship_length_counter += 1
                         long_ship_incrementer += 1
                         display_game_map(game_map)
                 elif long_ship_incrementer == 1:
-                    if check2(game_map, x_axis, y_axis, ship_coordinates):
+                    if long_ship_check(game_map, x_axis, y_axis, ship_coordinates):
                         ship_coordinates.append((x_axis, y_axis))
                         mark_ship_on_map(game_map, ship, x_axis, y_axis)
                         ship_length_counter += 1
@@ -118,7 +117,7 @@ def place_ships_on_map(ships):
     return game_map
 
 
-def check2(board, x_axis, y_axis, ship_list):
+def short_ship_check(board, x_axis, y_axis, ship_list):
     try:
         x_coordinate_other_ship = ship_list[-2][0]
         y_coordinate_other_ship = ship_list[-2][1]
@@ -131,7 +130,7 @@ def check2(board, x_axis, y_axis, ship_list):
         return True
 
 
-def check(board, x_axis, y_axis, ship_list):
+def long_ship_check(board, x_axis, y_axis, ship_list):
     try:
         if not ship_list:
             return True
@@ -253,12 +252,34 @@ def turn_printer(turn):
     print(f'Turns left: {turn}')
 
 
+def board_size_checker(size):
+    if type(size) == int and size >= 5 and size <= 10:
+        return True
+    else:
+        print('Invalid input! (board size must be between 5-10)')
+        return False
+
+
+def get_board_size():
+    while True:
+        board_height = input('Please enter the board height: ')
+        board_width = input('Please enter the board width: ')
+        if board_height.isdigit() and board_width.isdigit():
+            board_height = int(board_height)
+            board_width = int(board_width)
+            if board_size_checker(board_height):
+                if board_size_checker(board_width):
+                    return board_height, board_width
+        else:
+            print('Please enter numbers for board size!')
+
 
 def main():
     print('=== First placement phase! ===')
-    map1 = place_ships_on_map(ships_for_player1)
+    board_width, board_height = get_board_size()
+    map1 = place_ships_on_map(ships_for_player1, board_height, board_width)
     input('=== Next player\'s placement phase! ===')
-    map2 = place_ships_on_map(ships_for_player2)
+    map2 = place_ships_on_map(ships_for_player2, board_height, board_width)
     turns = ask_for_turn()
     turn_printer(turns)
 
