@@ -14,16 +14,21 @@ REPRESENATATION_SUNK_ON_MAP = 'S'
 TURN_BOTTOM_LIMIT = 5
 TURN_TOP_LIMIT = 50
 
-def create_map():
-    board = [
-        [' ', '1', '2', '3', '4', '5'], 
-        ['A', '0', '0', '0', '0', '0'], 
-        ['B', '0', '0', '0', '0', '0'], 
-        ['C', '0', '0', '0', '0', '0'], 
-        ['D', '0', '0', '0', '0', '0'], 
-        ['E', '0', '0', '0', '0', '0']
-        ]
-    return board
+def create_map(height, width):
+    matrix = []
+    first_row = []
+    first_row.append(' ')
+    for item in range(width+1):
+        first_row.append(str(item))
+    matrix.append(first_row)
+    for i in range(height):
+        lst = []
+        lst.append(alphabet[i])
+        for i in range(6):
+            lst.append(' ')
+        matrix.append(lst)
+    # print(matrix)
+    return matrix
 
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear') 
