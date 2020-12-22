@@ -82,6 +82,7 @@ def mark(board, player_input, player_turn, mode = None):
         if board[player_input[0]][player_input[1]] == ' . ':
             board[player_input[0]][player_input[1]] = ' O '
 
+
 def is_full(game_board):
     f = []
     for row in game_board:
@@ -110,9 +111,11 @@ def print_board():
     board.append(sixth_row)
     return board
 
+
 def printer(board):
     for row in board:
         print(''.join(row), end='\n')
+
 
 def has_won(game_board):
     if game_board[1][1] == ' X ' and game_board[1][3] == ' X ' and game_board[1][5] == ' X ' or game_board[1][1] == ' O ' and game_board[1][3] == ' O ' and game_board[1][5] == ' O ':

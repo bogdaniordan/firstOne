@@ -4,22 +4,33 @@ from copy import deepcopy
 
 alphabet = string.ascii_uppercase
 
-ships_for_player1 = [2,1]
-ships_for_player2 = [2,1]
+ships_for_player1 = [1,2]
+ships_for_player2 = [1,2]
 REPRESENTATION_WATER_ON_MAP = '0'
 REPRESENTATION_MISS_ON_MAP = 'M'
 REPRESENTATION_SHIP_ON_MAP = 'X'
 REPRESENTATION_HIT_ON_MAP = 'H'
 REPRESENATATION_SUNK_ON_MAP = 'S'
+TURN_BOTTOM_LIMIT = 5
+TURN_TOP_LIMIT = 50
 
 def create_map():
-    board = [[' ', '1', '2', '3', '4', '5'], ['A', '0', '0', '0', '0', '0'], ['B', '0', '0', '0', '0', '0'], ['C', '0', '0', '0', '0', '0'], ['D', '0', '0', '0', '0', '0'], ['E', '0', '0', '0', '0', '0']]
+    board = [
+        [' ', '1', '2', '3', '4', '5'], 
+        ['A', '0', '0', '0', '0', '0'], 
+        ['B', '0', '0', '0', '0', '0'], 
+        ['C', '0', '0', '0', '0', '0'], 
+        ['D', '0', '0', '0', '0', '0'], 
+        ['E', '0', '0', '0', '0', '0']
+        ]
     return board
 
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear') 
 
 def coordinates_in_valid_format(coordinates):
+    if len(coordinates) < 2:
+        return False
     if list(coordinates)[0] in list(alphabet) and list(coordinates)[1].isdigit() and len(coordinates) == 2:
         return True
     else:
@@ -69,18 +80,63 @@ def display_game_map(board):
         print(' '.join(row), end='\n')
 
 def place_ships_on_map(ships):
+    ship_coordinates = []
     count = 0
     game_map = create_map()
     display_game_map(game_map)
     for ship in ships:
+        long_ship_incrementer = 0
+        ship_length_counter = 0
         count += 1
         print(f'Placing ship number {count}, which is {ship} cells long!')
-        for unit in range(ship):
+        while ship_length_counter < ship:
             [x_axis, y_axis] = read_coordinates()
-            mark_ship_on_map(game_map, ship, x_axis, y_axis)
-        display_game_map(game_map)
+            if ship == 1:
+                if check(game_map, x_axis, y_axis, ship_coordinates):
+                    ship_coordinates .append((x_axis, y_axis))
+                    mark_ship_on_map(game_map, ship, x_axis, y_axis)
+                    ship_length_counter += 1
+            elif ship == 2:
+                if long_ship_incrementer == 0:
+                    if check(game_map, x_axis, y_axis, ship_coordinates):
+                        ship_coordinates .append((x_axis, y_axis))
+                        mark_ship_on_map(game_map, ship, x_axis, y_axis)
+                        ship_length_counter += 1
+                        long_ship_incrementer += 1
+                        display_game_map(game_map)
+                elif long_ship_incrementer == 1:
+                    if check2(game_map, x_axis, y_axis, ship_coordinates):
+                        ship_coordinates.append((x_axis, y_axis))
+                        mark_ship_on_map(game_map, ship, x_axis, y_axis)
+                        ship_length_counter += 1
+            display_game_map(game_map)
     return game_map
 
+
+def check2(board, x_axis, y_axis, ship_list):
+    try:
+        x_coordinate_other_ship = ship_list[-2][0]
+        y_coordinate_other_ship = ship_list[-2][1]
+        if x_axis == x_coordinate_other_ship and y_axis + 1 == y_coordinate_other_ship or x_axis == x_coordinate_other_ship and y_axis - 1 == y_coordinate_other_ship or x_axis + 1 == x_coordinate_other_ship and y_axis == y_coordinate_other_ship or x_axis-1 == x_coordinate_other_ship and y_axis == y_coordinate_other_ship:
+            print('Current ship is too close to other ship!')
+            return False
+        else:
+            return True
+    except IndexError:
+        return True
+
+
+def check(board, x_axis, y_axis, ship_list):
+    try:
+        if not ship_list:
+            return True
+        elif board[x_axis][y_axis + 1] == REPRESENTATION_SHIP_ON_MAP or board[x_axis][y_axis - 1] == REPRESENTATION_SHIP_ON_MAP  or board[x_axis + 1][y_axis] == REPRESENTATION_SHIP_ON_MAP  or board[x_axis-1][y_axis] == REPRESENTATION_SHIP_ON_MAP:
+            print('Ships are too close!')
+            return False
+        else:
+            return True
+    except IndexError:
+        return True
 
 
 def display_current_player_turn(current_player_map, player_one_map):
@@ -108,7 +164,7 @@ def ship_has_no_more_lives(board, x_axis, y_axis):
             if board[x_axis][y_axis + 1] == REPRESENTATION_WATER_ON_MAP or board[x_axis][y_axis + 1] == REPRESENTATION_MISS_ON_MAP:
                 return True
 
-
+ 
 
 def mark_ship_as_dead(board, x_axis, y_axis):
     try:
@@ -175,7 +231,7 @@ def display_winner(player_turn):
 
 
 def turn_is_valid(turn_input):
-    if turn_input < 5 or turn_input > 50:
+    if turn_input < TURN_BOTTOM_LIMIT or turn_input > TURN_TOP_LIMIT:
         print('Invalid input! (must be between 5-50)')
         return False
     else:
