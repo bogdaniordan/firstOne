@@ -113,7 +113,7 @@ def place_ships_on_map(ships, board_height, board_width):
             elif ship == 2:
                 if long_ship_incrementer == 0:
                     if short_ship_check(game_map, x_axis, y_axis, ship_coordinates):
-                        ship_coordinates .append((x_axis, y_axis))
+                        ship_coordinates.append((x_axis, y_axis))
                         mark_ship_on_map(game_map, ship, x_axis, y_axis)
                         ship_length_counter += 1
                         long_ship_incrementer += 1
@@ -174,10 +174,10 @@ def ship_has_no_more_lives(board, x_axis, y_axis):
             return False
     except IndexError:
         if y_axis == 5:
-            if board[x_axis][y_axis - 1] == REPRESENTATION_WATER_ON_MAP or board[x_axis][y_axis - 1] == REPRESENTATION_MISS_ON_MAP:
+            if board[x_axis][y_axis - 1] == REPRESENTATION_WATER_ON_MAP or board[x_axis][y_axis - 1] == REPRESENTATION_MISS_ON_MAP or board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
                 return True
         elif y_axis == 0:
-            if board[x_axis][y_axis + 1] == REPRESENTATION_WATER_ON_MAP or board[x_axis][y_axis + 1] == REPRESENTATION_MISS_ON_MAP:
+            if board[x_axis][y_axis + 1] == REPRESENTATION_WATER_ON_MAP or board[x_axis][y_axis + 1] == REPRESENTATION_MISS_ON_MAP or board[x_axis][y_axis + 1] == REPRESENTATION_HIT_ON_MAP:
                 return True
 
  
@@ -187,9 +187,8 @@ def mark_ship_as_dead(board, x_axis, y_axis):
         board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
         if board[x_axis][y_axis + 1] == REPRESENTATION_HIT_ON_MAP:
             board[x_axis][y_axis + 1] = REPRESENATATION_SUNK_ON_MAP
-        elif board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
+        if board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
             board[x_axis][y_axis - 1] = REPRESENATATION_SUNK_ON_MAP
-        return board
     except IndexError as err:
         print(f'{err}')
 
