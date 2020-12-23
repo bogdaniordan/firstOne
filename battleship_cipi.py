@@ -43,8 +43,8 @@ def coordinates_in_valid_format(coordinates):
 
 def coordinate_are_inside_map(coordinates):
     list_of_coordinates = list(coordinates)
-    f_index_alphabet = list(alphabet).index('F')
-    if list_of_coordinates[0] in list(alphabet)[(f_index_alphabet + 1):len(alphabet)] or int(list_of_coordinates[1]) > 10:
+    k_index_alphabet = list(alphabet).index('K')
+    if list_of_coordinates[0] in list(alphabet)[(k_index_alphabet + 1):len(alphabet)] or int(list_of_coordinates[1]) > 10:
         print('Coordinates are outside the range of the map!')
         return False
     else:
@@ -62,6 +62,16 @@ def transform_coordinates(coordinates):
         x_axis_coordinate = 4
     elif list_of_coordinates[0] == 'E':
         x_axis_coordinate = 5
+    elif list_of_coordinates[0] == 'F':
+        x_axis_coordinate = 6
+    elif list_of_coordinates[0] == 'G':
+        x_axis_coordinate = 7
+    elif list_of_coordinates[0] == 'H':
+        x_axis_coordinate = 8
+    elif list_of_coordinates[0] == 'I':
+        x_axis_coordinate = 9
+    elif list_of_coordinates[0] == 'J':
+        x_axis_coordinate = 10
     y_axis_coordinate = int(list_of_coordinates[1])
     return [x_axis_coordinate, y_axis_coordinate]
 
@@ -97,7 +107,7 @@ def place_ships_on_map(ships, board_height, board_width):
             [x_axis, y_axis] = read_coordinates()
             if ship == 1:
                 if short_ship_check(game_map, x_axis, y_axis, ship_coordinates):
-                    ship_coordinates .append((x_axis, y_axis))
+                    ship_coordinates.append((x_axis, y_axis))
                     mark_ship_on_map(game_map, ship, x_axis, y_axis)
                     ship_length_counter += 1
             elif ship == 2:
@@ -107,8 +117,11 @@ def place_ships_on_map(ships, board_height, board_width):
                         mark_ship_on_map(game_map, ship, x_axis, y_axis)
                         ship_length_counter += 1
                         long_ship_incrementer += 1
+                        # print('incrementing')
                         display_game_map(game_map)
-                elif long_ship_incrementer == 1:
+                        # print(ship_coordinates)
+                        # print(ship_length_counter)
+                elif long_ship_incrementer > 0:
                     if long_ship_check(game_map, x_axis, y_axis, ship_coordinates):
                         ship_coordinates.append((x_axis, y_axis))
                         mark_ship_on_map(game_map, ship, x_axis, y_axis)
@@ -117,7 +130,7 @@ def place_ships_on_map(ships, board_height, board_width):
     return game_map
 
 
-def short_ship_check(board, x_axis, y_axis, ship_list):
+def long_ship_check(board, x_axis, y_axis, ship_list):
     try:
         x_coordinate_other_ship = ship_list[-2][0]
         y_coordinate_other_ship = ship_list[-2][1]
@@ -130,7 +143,7 @@ def short_ship_check(board, x_axis, y_axis, ship_list):
         return True
 
 
-def long_ship_check(board, x_axis, y_axis, ship_list):
+def short_ship_check(board, x_axis, y_axis, ship_list):
     try:
         if not ship_list:
             return True
@@ -141,7 +154,6 @@ def long_ship_check(board, x_axis, y_axis, ship_list):
             return True
     except IndexError:
         return True
-
 
 def display_current_player_turn(current_player_map, player_one_map):
     first_player = 'Player 1'
@@ -243,9 +255,14 @@ def turn_is_valid(turn_input):
 
 
 def ask_for_turn():
-    user_input = int(input('Please enter a turn limit: '))
-    if turn_is_valid(user_input):
-        return user_input
+    while True:
+        user_input = input('Please enter a turn limit: ')
+        if user_input.isdigit():
+            user_input = int(user_input)
+            if turn_is_valid(user_input):
+                return user_input
+        else:
+            print('Please enter a number for turns.')
 
 
 def turn_printer(turn):
