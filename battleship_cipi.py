@@ -117,10 +117,7 @@ def place_ships_on_map(ships, board_height, board_width):
                         mark_ship_on_map(game_map, ship, x_axis, y_axis)
                         ship_length_counter += 1
                         long_ship_incrementer += 1
-                        # print('incrementing')
                         display_game_map(game_map)
-                        # print(ship_coordinates)
-                        # print(ship_length_counter)
                 elif long_ship_incrementer > 0:
                     if long_ship_check(game_map, x_axis, y_axis, ship_coordinates):
                         ship_coordinates.append((x_axis, y_axis))
