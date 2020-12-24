@@ -13,6 +13,7 @@ REPRESENTATION_HIT_ON_MAP = 'H'
 REPRESENATATION_SUNK_ON_MAP = 'S'
 TURN_BOTTOM_LIMIT = 5
 TURN_TOP_LIMIT = 50
+MAX_BOARD_SIZE = 10
 
 def create_map(height, width):
     matrix = []
@@ -44,7 +45,7 @@ def coordinates_in_valid_format(coordinates):
 def coordinate_are_inside_map(coordinates):
     list_of_coordinates = list(coordinates)
     k_index_alphabet = list(alphabet).index('K')
-    if list_of_coordinates[0] in list(alphabet)[(k_index_alphabet + 1):len(alphabet)] or int(list_of_coordinates[1]) > 10:
+    if list_of_coordinates[0] in list(alphabet)[(k_index_alphabet + 1):len(alphabet)] or int(list_of_coordinates[1]) > MAX_BOARD_SIZE:
         print('Coordinates are outside the range of the map!')
         return False
     else:
@@ -186,9 +187,15 @@ def mark_ship_as_dead(board, x_axis, y_axis):
             board[x_axis][y_axis + 1] = REPRESENATATION_SUNK_ON_MAP
         if board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
             board[x_axis][y_axis - 1] = REPRESENATATION_SUNK_ON_MAP
-    except IndexError as err:
-        print(f'{err}')
-
+    except IndexError:
+        if y_axis == 5:
+            board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
+            if board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
+                board[x_axis][y_axis - 1] = REPRESENATATION_SUNK_ON_MAP
+        elif y_axis == 0:
+            board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
+            if board[x_axis][y_axis + 1] == REPRESENTATION_HIT_ON_MAP:
+                board[x_axis][y_axis + 1] = REPRESENATATION_SUNK_ON_MAP
 
 def shoot_at_coordinates(game_map, x_axis, y_axis):
     if game_map[x_axis][y_axis] == REPRESENTATION_WATER_ON_MAP:
