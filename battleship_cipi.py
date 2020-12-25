@@ -42,10 +42,10 @@ def coordinates_in_valid_format(coordinates):
         print('Invalid input, coordinates are not in a valid format (e.g. A2)!')
         return False
 
-def coordinate_are_inside_map(coordinates):
+def coordinate_are_inside_map(coordinates, board_width):
     list_of_coordinates = list(coordinates)
     k_index_alphabet = list(alphabet).index('K')
-    if list_of_coordinates[0] in list(alphabet)[(k_index_alphabet + 1):len(alphabet)] or int(list_of_coordinates[1]) > MAX_BOARD_SIZE:
+    if list_of_coordinates[0] in list(alphabet)[(k_index_alphabet + 1):len(alphabet)] or int(list_of_coordinates[1]) > board_width:
         print('Coordinates are outside the range of the map!')
         return False
     else:
@@ -77,11 +77,11 @@ def transform_coordinates(coordinates):
     return [x_axis_coordinate, y_axis_coordinate]
 
 
-def read_coordinates():
+def read_coordinates(board_width):
     while True:
         coordinates = input('Please enter coordinates in the form [letter][digit]: ')
         if coordinates_in_valid_format(coordinates):
-            if coordinate_are_inside_map(coordinates):
+            if coordinate_are_inside_map(coordinates, board_width):
                 [x_axis, y_axis] = transform_coordinates(coordinates)
                 return [x_axis, y_axis]
 
@@ -105,7 +105,7 @@ def place_ships_on_map(ships, board_height, board_width):
         count += 1
         print(f'Placing ship number {count}, which is {ship} cells long!')
         while ship_length_counter < ship:
-            [x_axis, y_axis] = read_coordinates()
+            [x_axis, y_axis] = read_coordinates(board_width)
             if ship == 1:
                 if short_ship_check(game_map, x_axis, y_axis, ship_coordinates):
                     ship_coordinates.append((x_axis, y_axis))
@@ -166,7 +166,7 @@ def display_current_player_turn(current_player_map, player_one_map):
 
 def ship_has_no_more_lives(board, x_axis, y_axis):
     try:
-        if board[x_axis][y_axis + 1] != REPRESENTATION_SHIP_ON_MAP and board[x_axis][y_axis - 1] != REPRESENTATION_SHIP_ON_MAP:
+        if board[x_axis][y_axis + 1] != REPRESENTATION_SHIP_ON_MAP and board[x_axis][y_axis - 1] != REPRESENTATION_SHIP_ON_MAP and board[x_axis + 1][y_axis] != REPRESENTATION_SHIP_ON_MAP and board[x_axis - 1][y_axis] != REPRESENTATION_SHIP_ON_MAP:
             return True
         else:
             return False
@@ -177,6 +177,12 @@ def ship_has_no_more_lives(board, x_axis, y_axis):
         elif y_axis == 0:
             if board[x_axis][y_axis + 1] == REPRESENTATION_WATER_ON_MAP or board[x_axis][y_axis + 1] == REPRESENTATION_MISS_ON_MAP or board[x_axis][y_axis + 1] == REPRESENTATION_HIT_ON_MAP:
                 return True
+        elif x_axis == 5:
+            if board[x_axis - 1][y_axis] == REPRESENTATION_WATER_ON_MAP or board[x_axis - 1][y_axis] == REPRESENTATION_MISS_ON_MAP or board[x_axis - 1][y_axis] == REPRESENTATION_HIT_ON_MAP:
+                return True
+        elif x_axis == 0:
+            if board[x_axis + 1][y_axis] == REPRESENTATION_WATER_ON_MAP or board[x_axis + 1][y_axis] == REPRESENTATION_MISS_ON_MAP or board[x_axis + 1][y_axis] == REPRESENTATION_HIT_ON_MAP:
+                return True
 
  
 
@@ -185,8 +191,12 @@ def mark_ship_as_dead(board, x_axis, y_axis):
         board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
         if board[x_axis][y_axis + 1] == REPRESENTATION_HIT_ON_MAP:
             board[x_axis][y_axis + 1] = REPRESENATATION_SUNK_ON_MAP
-        if board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
+        elif board[x_axis][y_axis - 1] == REPRESENTATION_HIT_ON_MAP:
             board[x_axis][y_axis - 1] = REPRESENATATION_SUNK_ON_MAP
+        elif board[x_axis + 1][y_axis] == REPRESENTATION_HIT_ON_MAP:
+            board[x_axis + 1][y_axis] = REPRESENATATION_SUNK_ON_MAP
+        elif board[x_axis - 1][y_axis] == REPRESENTATION_HIT_ON_MAP:
+            board[x_axis - 1][y_axis] = REPRESENATATION_SUNK_ON_MAP
     except IndexError:
         if y_axis == 5:
             board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
@@ -196,6 +206,15 @@ def mark_ship_as_dead(board, x_axis, y_axis):
             board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
             if board[x_axis][y_axis + 1] == REPRESENTATION_HIT_ON_MAP:
                 board[x_axis][y_axis + 1] = REPRESENATATION_SUNK_ON_MAP
+        elif x_axis == 5:
+            board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
+            if board[x_axis - 1][y_axis] == REPRESENTATION_HIT_ON_MAP:
+                board[x_axis - 1][y_axis] = REPRESENATATION_SUNK_ON_MAP
+        elif x_axis == 0:
+            board[x_axis][y_axis] = REPRESENATATION_SUNK_ON_MAP
+            if board[x_axis + 1][y_axis] == REPRESENTATION_HIT_ON_MAP:
+                board[x_axis + 1][y_axis] = REPRESENATATION_SUNK_ON_MAP
+
 
 def shoot_at_coordinates(game_map, x_axis, y_axis):
     if game_map[x_axis][y_axis] == REPRESENTATION_WATER_ON_MAP:
@@ -307,7 +326,7 @@ def main():
     enemy_map = map2
     while True:
         player_turn = display_current_player_turn(shooting_player_map, map1)
-        [x_axis, y_axis] = read_coordinates()
+        [x_axis, y_axis] = read_coordinates(board_width)
         shoot_at_coordinates(enemy_map, x_axis, y_axis)
 
         display_enemy_map(enemy_map)
